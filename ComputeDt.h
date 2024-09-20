@@ -30,7 +30,7 @@ public:
                               State q = getStateFromArray(Q, i, j);
                               real_t cs = speedOfSound(q, params);
 
-                              real_t inv_dt_hyp_loc = (cs + fabs(q[IU]))/params.dx + (cs + fabs(q[IV]))/params.dx;
+                              real_t inv_dt_hyp_loc = (cs + fabs(q[IU]))/params.dx + (cs + fabs(q[IV]))/params.dy;
 
                               real_t inv_dt_par_tc_loc = params.epsilon;
                               if (params.thermal_conductivity_active)
@@ -50,9 +50,9 @@ public:
                                Kokkos::Max<real_t>(inv_dt_par_visc));
   
     if (diag) {
-      std::cout << "Computing dts at (t=" << t << ") : dt_hyp=" << 1.0/inv_dt_hyp
-                << "; dt_TC="   << 1.0/inv_dt_par_tc
-                << "; dt_visc=" << 1.0/inv_dt_par_visc << std::endl; 
+      std::cout << "Computing dts at (t=" << t << ") : dt_hyp=" << params.CFL/inv_dt_hyp
+                << "; dt_TC="   << params.CFL/inv_dt_par_tc
+                << "; dt_visc=" << params.CFL/inv_dt_par_visc << std::endl; 
     }
 
     return params.CFL / std::max({inv_dt_hyp, inv_dt_par_tc, inv_dt_par_visc});
